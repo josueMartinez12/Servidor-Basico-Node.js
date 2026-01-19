@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Edad Pro</title>
+
+    <style>
+        /* ===============================
+           VARIABLES DE COLOR
+        ================================ */
+        :root {
+            --primary: #6366f1;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+        }
+
+        /* ===============================
+           ESTILOS GENERALES
+        ================================ */
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* ===============================
+           CONTENEDOR
+        ================================ */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            width: 90%;
+            max-width: 500px;
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        header {
+            text-align: center;
+        }
+
+        /* ===============================
+           FORMULARIO
+        ================================ */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input[type="date"] {
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="date"]:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* ===============================
+           RESULTADO
+        ================================ */
+        #result {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: #f1f5f9;
+            border-radius: 1rem;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .age-val {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+        }
+
+        /* ===============================
+           ANIMACIÓN
+        ================================ */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <header>
+            <h2>Calculadora de Edad</h2>
+            <p>Introduce tu fecha de nacimiento</p>
+        </header>
+
+        <main class="input-group">
+            <label for="birthdate">Fecha de nacimiento</label>
+            <input type="date" id="birthdate">
+            <button onclick="calculateAge()">Calcular Edad</button>
+        </main>
+
+        <section id="result">
+            <span>Tienes aproximadamente:</span>
+            <span class="age-val" id="yearsDisplay">-- años</span>
+            <small id="detailDisplay"></small>
+        </section>
+    </div>
+
+    <!-- ===============================
+         JAVASCRIPT
+    ================================ -->
+    <script>
+        function calculateAge() {
+
+            // 1. Obtener los elementos del DOM
+            const birthdateInput = document.getElementById('birthdate').value;
+            const resultDiv = document.getElementById('result');
+
+            // 2. Validación
+            if (!birthdateInput) {
+                alert("Por favor, selecciona una fecha");
+                return;
+            }
+
+            // 3. Convertir strings a fechas
+            const birthDate = new Date(birthdateInput);
+            const today = new Date();
+
+            // 4. Cálculo inicial
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            // 5. Lógica de corrección
+            if (days < 0) {
+                months--;
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // 6. Mostrar resultados
+            document.getElementById('yearsDisplay').innerText = `${years} años`;
+            document.getElementById('detailDisplay').innerText =
+                `${months} meses y ${days} días desde tu último cumpleaños.`;
+
+            // 7. Mostrar el resultado
+            resultDiv.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
